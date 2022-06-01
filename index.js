@@ -19,7 +19,7 @@ connection.connect(function (err) {
   startPrompt();
 });
 
-// Prompts user with a list of questions.
+// PROMPTS USER WITH QUESTIONS.
 function startPrompt() {
   inquirer
     .prompt([
@@ -41,14 +41,15 @@ function startPrompt() {
     .then(function (val) {
       switch (val.choice) {
         case "View All Employees?":
-          viewAllEmployees();
+          showAllEmployees();
           break;
 
         case "View All Employees By Departments?":
-          viewAllDepartments();
+          showAllDepartments();
           break;
+
         case "View all Employees By Roles":
-          viewAllRoles();
+          showAllRoles();
           break;
 
         case "Add Employee?":
@@ -71,4 +72,106 @@ function startPrompt() {
 }
 
 // SHOW ALL EMPLOYEES
-
+function showAllEmployees() {
+  connection.query(
+    "SELECT employee.firstName, employee.lastName, role.title, role.salary, department.name, CONCAT(e.firstName, ' ' ,e.lastName) AS Manager FROM employee INNER JOIN role on role.id = employee.roleId INNER JOIN department on department.id = role.departmentId left join employee e on employee.managerId = e.id;",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startPrompt();
+    }
+  );
+}
+// SHOW ALL EMPLOYEES BY DEPARTMENT
+function showAllDepartments() {
+  connection.query(
+    "SELECT employee.firstName, employee.lastName, department.name AS Department FROM employee JOIN role ON employee.roleId = role.id JOIN department ON role.departmentId = department.id ORDER BY employee.id;",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startPrompt();
+    }
+  );
+}
+// SHOW ALL ROLES
+function showAllRoles() {
+  connection.query(
+    "SELECT employee.firstName, employee.lastName, role.title AS Title FROM employee JOIN role ON employee.roleId = role.id;",
+    function (err, res) {
+      if (err) throw err;
+      console.table(res);
+      startPrompt();
+    }
+  );
+}
+//  SELECT ROLE FOR ADD EMPLOYEE PROMPT
+var roleArray = [];
+function selectRole() {
+  connection.query("SELECT * FROM role", function (err, res) {
+    if (err) throw err;
+    for (var i = 0; i < res.length; i++) {
+      roleArray.push(res[i].title);
+    }
+  });
+  return roleArray;
+}
+// SELECT ROLE MANAGER ADD EMPLOYEE PROMPT
+var managersArray = [];
+function selectManager() {
+  connection.query(
+    "SELECT first_name, last_name FROM employee WHERE manager_id IS NULL",
+    function (err, res) {
+      if (err) throw err;
+      for (var i = 0; i < res.length; i++) {
+        managersArray.push(res[i].first_name);
+      }
+    }
+  );
+  return managersArray;
+}
+// ADD EMPLOYEE
+function addEmployee() {
+  inquirer
+    .prompt([
+      {
+        name: "firstName",
+        type: "input",
+        message: "Enter the first name ",
+      },
+      {
+        name: "lastName",
+        type: "input",
+        message: "Enter the last name ",
+      },
+      {
+        name: "role",
+        type: "list",
+        message: "What is their role? ",
+        choices: selectRole(),
+      },
+      {
+        name: "choice",
+        type: "rawlist",
+        message: "Whats their managers name?",
+        choices: selectManager(),
+      },
+    ])
+    .then(function (val) {
+      var roleId = selectRole().indexOf(val.role) + 1;
+      var managerId = selectManager().indexOf(val.choice) + 1;
+      connection.query(
+        "INSERT INTO employee SET ?",
+        {
+          firstName: val.firstName,
+          lastName: val.lastName,
+          managerId: managerId,
+          roleId: roleId,
+        },
+        function (err) {
+          if (err) throw err;
+          console.table(val);
+          startPrompt();
+        }
+      );
+    });
+}
