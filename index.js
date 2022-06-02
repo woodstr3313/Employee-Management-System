@@ -1,7 +1,7 @@
 const inquirer = require("inquirer");
 const mysql = require("mysql2");
 const consoleTable = require("console.table");
-
+// const db = require('./db')
 const connection = mysql.createConnection(
   {
     host: "localhost",
@@ -134,6 +134,7 @@ function selectManager() {
   return managersArray;
 }
 // ADD EMPLOYEE
+
 function addEmployee() {
   inquirer
     .prompt([
@@ -167,7 +168,9 @@ function addEmployee() {
       var roleId = selectRole().indexOf(val.role) + 1
       var managerId = selectManager().indexOf(val.choice) + 1
       console.log(roleId, managerId);
+      // connection.query("SET GLOBAL FOREIGN_KEY_CHECKS = 0")
       connection.query(
+        
         "INSERT INTO employees SET ?",
         {
           firstName: val.firstName,
@@ -183,6 +186,7 @@ function addEmployee() {
       );
     });
 }
+// "SET GLOBAL FOREIGN_KEY_CHECKS = 0";
 // UPDATE EMPLOYEE
 function updateEmployee() {
   connection.query(
@@ -212,9 +216,9 @@ function updateEmployee() {
           },
         ])
         .then(function (val) {
-          var roleId = selectRole().indexOf(val.role) + 1
+          var roleId = selectRole().indexOf(val.role) + 1;
           connection.query(
-            "UPDATE employees SET WHERE?",
+            "UPDATE employees SET WHERE ?",
             {
               lastName: val.LastName
             },
