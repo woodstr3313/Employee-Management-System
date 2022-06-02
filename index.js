@@ -29,10 +29,10 @@ function startPrompt() {
         name: "choice",
         choices: [
           "View All Employees?",
-          "View all Employees By Deparments",
-          "View all Employees By Roles",
+          "View All Employees By Departments?",
+          "View all Employees By Roles?",
           "Add Employee?",
-          "Update Employee",
+          "Update Employee?",
           "Add Department?",
           "Add Role?",
         ],
@@ -48,7 +48,7 @@ function startPrompt() {
           showAllDepartments();
           break;
 
-        case "View all Employees By Roles":
+        case "View all Employees By Roles?":
           showAllRoles();
           break;
 
@@ -56,7 +56,7 @@ function startPrompt() {
           addEmployee();
           break;
 
-        case "Update Employee":
+        case "Update Employee?":
           updateEmployee();
           break;
 
@@ -67,6 +67,8 @@ function startPrompt() {
         case "Add Role?":
           addRole();
           break;
+        default:
+          console.log("didnt find a match");  
       }
     });
 }
@@ -84,6 +86,7 @@ function showAllEmployees() {
 }
 // SHOW ALL EMPLOYEES BY DEPARTMENT
 function showAllDepartments() {
+  // console.log("Got here")
   connection.query(
     "SELECT employees.firstName, employees.lastName, departments.departmentName AS Departments FROM employees JOIN roles ON employees.roleId = roles.id JOIN departments ON roles.departmentId = departments.id ORDER BY employees.id;",
     function (err, res) {
@@ -96,7 +99,7 @@ function showAllDepartments() {
 // SHOW ALL ROLES
 function showAllRoles() {
   connection.query(
-    "SELECT employees.firstName, employees.lastName, roles.title AS Title FROM employees JOIN roles ON employees.roleId = roles.id;",
+    "SELECT employees.firstName, employees.lastName, roles.title AS Role FROM employees JOIN roles ON employees.roleId = roles.id;",
     function (err, res) {
       if (err) throw err;
       console.table(res);
@@ -107,8 +110,9 @@ function showAllRoles() {
 //  SELECT ROLE FOR ADD EMPLOYEE PROMPT
 function selectRole() {
   var roleArray = [];
-  connection.query("SELECT * FROM roles", function (err, res) {
-    if (err) throw err;
+  connection.query("SELECT * FROM roles", 
+  function (err, res) {
+    if (err) throw err
     for (var i = 0; i < res.length; i++) {
       roleArray.push(res[i].title);
     }
@@ -157,13 +161,17 @@ function addEmployee() {
       },
     ])
     .then(function (val) {
+      console.log(selectRole());
+      console.log(val.role);
+
       var roleId = selectRole().indexOf(val.role) + 1
       var managerId = selectManager().indexOf(val.choice) + 1
+      console.log(roleId, managerId);
       connection.query(
         "INSERT INTO employees SET ?",
         {
-          firstName: val.FirstName,
-          lastName: val.LastName,
+          firstName: val.firstName,
+          lastName: val.lastName,
           managerId: managerId,
           roleId: roleId,
         },
