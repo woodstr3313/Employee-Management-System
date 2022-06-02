@@ -5,9 +5,9 @@ const consoleTable = require("console.table");
 const connection = mysql.createConnection(
   {
     host: "localhost",
-    port: 3001,
+    // port: 3001,
     user: "root",
-    password: "",
+    password: "FBktj0526!",
     database: "employee_db",
   },
   console.log("Connected to Employee Database.")
@@ -74,7 +74,7 @@ function startPrompt() {
 // SHOW ALL EMPLOYEES
 function showAllEmployees() {
   connection.query(
-    "SELECT employees.firstName, employees.lastName, roles.title, roles.salary, departments.name, CONCAT(e.firstName, ' ' ,e.lastName) AS Manager FROM employees INNER JOIN roles on roles.id = employees.roleId INNER JOIN departments on departments.id = roles.departmentId left join employees e on employees.managerId = e.id;",
+    "SELECT employees.firstName, employees.lastName, roles.title, roles.salary, departments.departmentName, CONCAT(e.firstName, ' ' ,e.lastName) AS Manager FROM employees INNER JOIN roles on roles.id = employees.roleId INNER JOIN departments on departments.id = roles.departmentId left join employees e on employees.managerId = e.id;",
     function (err, res) {
       if (err) throw err;
       console.table(res);
@@ -85,13 +85,13 @@ function showAllEmployees() {
 // SHOW ALL EMPLOYEES BY DEPARTMENT
 function showAllDepartments() {
   connection.query(
-    "SELECT employees.firstName, employees.lastName, departments.name AS Departments FROM employees JOIN roles ON employees.roleId = roles.id JOIN departments ON roles.departmentId = departments.id ORDER BY employees.id;",
+    "SELECT employees.firstName, employees.lastName, departments.departmentName AS Departments FROM employees JOIN roles ON employees.roleId = roles.id JOIN departments ON roles.departmentId = departments.id ORDER BY employees.id;",
     function (err, res) {
-      if (err) throw err;
-      console.table(res);
-      startPrompt();
+      if (err) throw err
+      console.table(res)
+      startPrompt()
     }
-  );
+  )
 }
 // SHOW ALL ROLES
 function showAllRoles() {
@@ -105,8 +105,8 @@ function showAllRoles() {
   );
 }
 //  SELECT ROLE FOR ADD EMPLOYEE PROMPT
-var roleArray = [];
 function selectRole() {
+  var roleArray = [];
   connection.query("SELECT * FROM roles", function (err, res) {
     if (err) throw err;
     for (var i = 0; i < res.length; i++) {
@@ -116,14 +116,14 @@ function selectRole() {
   return roleArray;
 }
 // SELECT ROLE MANAGER ADD EMPLOYEE PROMPT
-var managersArray = [];
 function selectManager() {
+  var managersArray = [];
   connection.query(
-    "SELECT first_name, last_name FROM employees WHERE manager_id IS NULL",
+    "SELECT firstName, lastName FROM employees WHERE managerId IS NULL",
     function (err, res) {
       if (err) throw err;
       for (var i = 0; i < res.length; i++) {
-        managersArray.push(res[i].first_name);
+        managersArray.push(res[i].firstName);
       }
     }
   );
@@ -157,13 +157,13 @@ function addEmployee() {
       },
     ])
     .then(function (val) {
-      var roleId = selectRole().indexOf(val.role) + 1;
-      var managerId = selectManager().indexOf(val.choice) + 1;
+      var roleId = selectRole().indexOf(val.role) + 1
+      var managerId = selectManager().indexOf(val.choice) + 1
       connection.query(
-        "INSERT INTO employees SET?",
+        "INSERT INTO employees SET ?",
         {
-          firstName: val.firstName,
-          lastName: val.lastName,
+          firstName: val.FirstName,
+          lastName: val.LastName,
           managerId: managerId,
           roleId: roleId,
         },
@@ -190,7 +190,7 @@ function updateEmployee() {
             choices: function () {
               var lastName = [];
               for (var i = 0; i < res.length; i++) {
-                lastName.push(res[i].last_name);
+                lastName.push(res[i].lastName);
               }
               return lastName;
             },
@@ -204,21 +204,21 @@ function updateEmployee() {
           },
         ])
         .then(function (val) {
-          var roleId = selectRole().indexOf(val.role) + 1;
+          var roleId = selectRole().indexOf(val.role) + 1
           connection.query(
             "UPDATE employees SET WHERE?",
             {
-              last_name: val.lastName,
+              lastName: val.LastName
             },
             {
-              role_id: roleId,
+              roleId: roleId
             },
             function (err) {
-              if (err) throw err;
-              console.table(val);
+              if (err) throw err
+              console.table(val)
               startPrompt();
             }
-          );
+          )
         });
     }
   );
@@ -229,13 +229,13 @@ function addDepartment() {
         {
           name: "name",
           type: "input",
-          message: "Add a new department?"
+          message: "What is the name of the new department?"
         }
     ]).then(function(res) {
         var query = connection.query(
             "INSERT INTO departments SET ? ",
             {
-              name: res.name
+              departmentName: res.DepartmentName
             },
             function(err) {
                 if (err) throw err
@@ -247,7 +247,8 @@ function addDepartment() {
   }
 // ADD EMPLOYEE ROLE
 function addRole() { 
-    connection.query("SELECT roles.title AS Title, roles.salary AS Salary FROM roles",   function(err, res) {
+    connection.query("SELECT roles.title AS Title, roles.salary AS Salary FROM roles",   
+    function(err, res) {
       inquirer.prompt([
           {
             name: "Title",
