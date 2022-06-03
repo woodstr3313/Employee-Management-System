@@ -26,9 +26,7 @@
 
   ![View all Employees, Roles and Departments”.](./assets/View%20All%20Employees%20Departments%20and%20Roles.png)
 
-  Walkthrough video. 
-  
-  ![Walkthrough Video](https://drive.google.com/file/d/1iGnEUHdT3Sz0d59Kper2dxDW37eRUhYW/view) 
+  Walkthrough Video: https://drive.google.com/file/d/1iGnEUHdT3Sz0d59Kper2dxDW37eRUhYW/view
 
 
 ## License
