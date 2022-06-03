@@ -1,7 +1,7 @@
 # Employee Tracker
 
 ## Description
-  This application was created so users can track employees using a database. Users are able to view all employees, departments, and roles. Users can also add employees, departments, reoles and update employees from the terminal. 
+  This application was created so users can track employees using a database. Users are able to view all employees, departments, and roles. Users can also add employees, departments, roles and update employees from the terminal. 
 
 ## Table of Contents 
 
@@ -13,28 +13,23 @@
 - [Tests](#test)
 
 ## Installation
-  npm i for dependencies
+  npm i for dependencies and then login to mysql shell. You can then source the database using source db/schema.sql and then seed the database with source db/seed.sql 
 
 ## Usage
-  Please run node index.js
+  Please run with node index.js
 
-  <!-- ![In Insomnia, the user tests “Add Friend”.](./Assets/Add%20Friend.png)
+  ![Question Prompt.](./assets/question%20prompt.png)
 
-  ![In Insomnia, the user tests “Add Reaction.”.](./Assets/Add%20Reaction.png)
+  ![Add and update employee.](./assets/addandupdateemployee.png)
 
-  ![In Insomnia, the user tests “Create Thought”.](./Assets/Create%20Thought.png)
+  ![Source and seed databaase”.](./assets/Source%20Schema%20and%20Seed.png)
 
-  ![In Insomnia, the user tests “Delete User”.](./Assets/Delete%20User.png)
+  ![View all Employees, Roles and Departments”.](./assets/View%20All%20Employees%20Departments%20and%20Roles.png)
 
-  ![In Insomnia, the user tests “Get All Thoughts”.](./Assets/Get%20All%20Thoughts.png)
-
-  ![In Insomnia, the user tests “Get All Users”.](./Assets/Get%20All%20Users.png)
-
-   ![In Insomnia, the user tests “Update User”.](./Assets/Update%20User.png)
   Walkthrough video. 
   
-  ![Walkthrough Video](https://drive.google.com/file/d/1doaTId7X57IziRMVFhRYwANmQsCLvzR_/view)
-  ![Walkthrough Video for Reactions](https://drive.google.com/file/d/117dsIU2aKa0GRuse002QpTbMAyf_se_x/view) -->
+  ![Walkthrough Video](https://drive.google.com/file/d/1iGnEUHdT3Sz0d59Kper2dxDW37eRUhYW/view) 
+
 
 ## License
 ![License: IPL 1.0](https://img.shields.io/badge/License-IPL_1.0-blue.svg)
